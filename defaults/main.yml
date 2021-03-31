@@ -1,0 +1,49 @@
+---
+proxy_env: {}
+loki_version: 2.2.0
+loki_listen_port: 3100
+loki_listen_address: 0.0.0.0
+loki_config_dir: /etc/loki
+loki_config_file: config.yml
+loki_binary_install_dir: /usr/local/bin
+loki_data_dir: /var/lib/loki
+loki_config_log_level: warn
+loki_system_user: loki
+loki_system_group: loki
+loki_allow_firewall: false
+loki_config:
+  auth_enabled: false
+  server:
+    http_listen_address: "{{ loki_listen_address }}"
+    http_listen_port: "{{ loki_listen_port }}"
+    grpc_listen_address: "{{ loki_listen_address }}"
+    grpc_listen_port: 9095
+    log_level: "{{ loki_config_log_level }}"
+  ingester:
+    lifecycler:
+      address: "127.0.0.1"
+      ring:
+        kvstore:
+          store: inmemory
+        replication_factor: 1
+      final_sleep: 0s
+    chunk_idle_period: 5m
+    chunk_retain_period: 30s
+  schema_config:
+    configs:
+    - from: 2021-01-01
+      store: boltdb
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 168h
+  storage_config:
+    boltdb:
+      directory: /tmp/loki/index
+    filesystem:
+      directory: /tmp/loki/chunks
+  limits_config:
+    enforce_metric_name: false
+    reject_old_samples: true
+    reject_old_samples_max_age: 168h

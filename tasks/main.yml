@@ -142,7 +142,9 @@
     mode: 0644
   notify: restart loki
   become: true
-  tags: loki
+  tags:
+    - loki
+    - loki_config
 
 - name: create systemd service unit
   template:

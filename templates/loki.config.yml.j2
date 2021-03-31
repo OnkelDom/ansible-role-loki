@@ -1,5 +1,5 @@
 ---
 {{ ansible_managed | comment }}
 {% if loki_config | length > 0 %}
-{{ loki_config | to_nice_yaml | indent(2, true) }}
+{{ loki_config | to_nice_yaml(indent=2) }}
 {% endif %}

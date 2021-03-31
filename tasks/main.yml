@@ -76,7 +76,7 @@
     set_fact:
       loki_checksum: "{{ item.split(' ')[0] }}"
     with_items: "{{ _checksums }}"
-    when: "('linux-' + go_arch + '.zip') in item"
+    when: "('loki-linux-' + go_arch + '.zip') in item"
     become: true
     tags: loki
 
@@ -85,7 +85,7 @@
       url: "https://github.com/grafana/loki/releases/download/v{{ loki_version }}/loki-linux-{{ go_arch }}.zip"
       dest: "/tmp/loki-{{ loki_version }}.linux-{{ go_arch }}.zip"
       checksum: "sha256:{{ loki_checksum }}"
-    environment: "{{proxy_env}}"
+    environment: "{{ proxy_env }}"
     register: _download_binary
     until: _download_binary is succeeded
     retries: 5
